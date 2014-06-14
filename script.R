@@ -80,14 +80,15 @@ towns <- fread("data/com_coords.csv") %>%
 g <- ggplot(towns, 
             aes(LONG, LAT, group = POSTAL.CODE, fill = WOM.PROP)) + 
   geom_polygon(color = "black", size = .05) +
-  scale_fill_gradient2(low = "blue4", mid = "white", high = "red", midpoint = 0.5, limits = c(0.4, 0.6),
-                       guide = guide_colorbar(title = element_text(" <- plus d'hommes | plus de femmes ->", 
+  scale_fill_gradient2(low = "blue4", mid = "white", high = "red", midpoint = 0.5, 
+                       limits = c(0.4, 0.6), breaks=c(.4,.45,.5,.55,.6),
+                       guide = guide_colorbar(title = element_text(" < plus d'hommes | plus de femmes >", 
                                                                    hjust = 1),
                                               label.position = "bottom",
                                               title.position = "top",
                                               barwidth = 25)) +
   #coord_fixed() +
-  theme_graphzoo(base_size = 22, family = "Open Sans") +
+  theme_graphzoo(base_size = 24, family = "Droid Sans Mono") +
   theme(axis.line = element_blank(), 
         axis.text.x = element_blank(), 
         axis.text.y = element_blank(),
@@ -110,6 +111,40 @@ png("gender_fr.png", width = 800, height = 900, bg = "#F0F0F0")
 print(g)
 dev.off() 
 
+g <- ggplot(towns, 
+            aes(LONG, LAT, group = POSTAL.CODE, fill = WOM.PROP)) + 
+  geom_polygon(color = "black", size = .05) +
+  scale_fill_gradient2(low = "blue4", mid = "white", high = "red", midpoint = 0.5, 
+                       limits = c(0.4, 0.6), breaks=c(.4,.45,.5,.55,.6),
+                       guide = guide_colorbar(title = element_text("  < more men | more women >", 
+                                                                   hjust = 1),
+                                              label.position = "bottom",
+                                              title.position = "top",
+                                              barwidth = 25)) +
+  #coord_fixed() +
+  theme_graphzoo(base_size = 24, family = "Droid Sans Mono") +
+  theme(axis.line = element_blank(), 
+        axis.text.x = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(), 
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        plot.margin = unit(c(1, 0, 0, -1), "lines"),
+        legend.position = "bottom",
+        legend.title.align = 0.5) +
+  ggtitle(bquote(atop("Gender ratio by town", 
+                      atop(italic(.("Metropolitan France (2010)")), ""))))
+
+g <- addBanner(g, font.size = 6,
+               l.txt = "GRAPHZOO.TUMBLR.COM", 
+               r.txt = "SOURCE: DATA.GOUV.FR, INSEE, OSM")
+
+png("gender_en.png", width = 800, height = 900, bg = "#F0F0F0")
+print(g)
+dev.off() 
+
 
 #+ plot.age.bal, eco=false
 age.bal.fr <- group_by(pop.fr, POSTAL.CODE, AGE) %>%
@@ -126,13 +161,13 @@ g <- ggplot(towns,
             aes(LONG, LAT, group = POSTAL.CODE, fill = MED.AGE)) + 
   geom_polygon(color = "black", size = .05) +
   scale_fill_gradient2(low = "blue4", mid = "white", high = "red", midpoint = (max(towns$MED.AGE) + min(towns$MED.AGE)) / 2,
-                       guide = guide_colorbar(title = element_text("<- plus jeune | plus vieux ->", 
+                       guide = guide_colorbar(title = element_text("< plus jeune | plus vieux >", 
                                                                    hjust = 1),
                                               label.position = "bottom",
                                               title.position = "top",
                                               barwidth = 25)) +
   #coord_fixed() +
-  theme_graphzoo(base_size = 22, family = "Open Sans") +
+  theme_graphzoo(base_size = 24, family = "Droid Sans Mono") +
   theme(axis.line = element_blank(), 
         axis.text.x = element_blank(), 
         axis.text.y = element_blank(),
@@ -155,4 +190,35 @@ png("median_age_fr.png", width = 800, height = 900, bg = "#F0F0F0")
 print(g)
 dev.off()   
 
+g <- ggplot(towns, 
+            aes(LONG, LAT, group = POSTAL.CODE, fill = MED.AGE)) + 
+  geom_polygon(color = "black", size = .05) +
+  scale_fill_gradient2(low = "blue4", mid = "white", high = "red", midpoint = (max(towns$MED.AGE) + min(towns$MED.AGE)) / 2,
+                       guide = guide_colorbar(title = element_text("< younger | older >  ", 
+                                                                   hjust = 1),
+                                              label.position = "bottom",
+                                              title.position = "top",
+                                              barwidth = 25)) +
+  #coord_fixed() +
+  theme_graphzoo(base_size = 24, family = "Droid Sans Mono") +
+  theme(axis.line = element_blank(), 
+        axis.text.x = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(), 
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        plot.margin = unit(c(1, 0, 0, -1), "lines"),
+        legend.position = "bottom",
+        legend.title.align = 0.5) +
+  ggtitle(bquote(atop("Median age by town", 
+                      atop(italic(.("Metropolitan France (2010)")), ""))))
 
+g <- addBanner(g, font.size = 6,
+               l.txt = "GRAPHZOO.TUMBLR.COM", 
+               r.txt = "SOURCE: DATA.GOUV.FR, INSEE, OSM")
+
+png("median_age_en.png", width = 800, height = 900, bg = "#F0F0F0")
+print(g)
+dev.off()   
