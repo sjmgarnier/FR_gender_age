@@ -45,6 +45,7 @@ if (!file.exists("data/com_coords.csv")) {
   file.remove("data/communes-20140306-100m-shp.zip")
   
   france <- readOGR(dsn = "data/", layer = "communes-20140306-100m")
+  france <- spTransform(france, CRS = CRS("+proj=merc +ellps=GRS80"))
   france@data$id <- rownames(france@data)
   france.points <- fortify(france, region="id")
   france.df <- as.data.table(left_join(france.points, france@data, by="id")) %>%
@@ -74,7 +75,7 @@ gender.bal.fr <- group_by(pop.fr, POSTAL.CODE, GENDER) %>%
   summarize(WOM.PROP = COUNT[GENDER == 2] / sum(COUNT))
 
 towns <- fread("data/com_coords.csv") %>%
-  filter(LAT > 40) %>%
+  filter(LAT > 5000000) %>%
   merge(gender.bal.fr, by = "POSTAL.CODE")
 
 g <- ggplot(towns, 
@@ -87,7 +88,7 @@ g <- ggplot(towns,
                                               label.position = "bottom",
                                               title.position = "top",
                                               barwidth = 25)) +
-  #coord_fixed() +
+  coord_fixed() +
   theme_graphzoo(base_size = 24, family = "Droid Sans Mono") +
   theme(axis.line = element_blank(), 
         axis.text.x = element_blank(), 
@@ -107,7 +108,7 @@ g <- addBanner(g, font.size = 6,
                l.txt = "GRAPHZOO.TUMBLR.COM", 
                r.txt = "SOURCE: DATA.GOUV.FR, INSEE, OSM")
 
-png("gender_fr.png", width = 800, height = 900, bg = "#F0F0F0")
+png("gender_fr.png", width = 700, height = 800, bg = "#F0F0F0")
 print(g)
 dev.off() 
 
@@ -121,7 +122,7 @@ g <- ggplot(towns,
                                               label.position = "bottom",
                                               title.position = "top",
                                               barwidth = 25)) +
-  #coord_fixed() +
+  coord_fixed() +
   theme_graphzoo(base_size = 24, family = "Droid Sans Mono") +
   theme(axis.line = element_blank(), 
         axis.text.x = element_blank(), 
@@ -141,7 +142,7 @@ g <- addBanner(g, font.size = 6,
                l.txt = "GRAPHZOO.TUMBLR.COM", 
                r.txt = "SOURCE: DATA.GOUV.FR, INSEE, OSM")
 
-png("gender_en.png", width = 800, height = 900, bg = "#F0F0F0")
+png("gender_en.png", width = 700, height = 800, bg = "#F0F0F0")
 print(g)
 dev.off() 
 
@@ -154,7 +155,7 @@ age.bal.fr <- group_by(pop.fr, POSTAL.CODE, AGE) %>%
             AVG.AGE = sum(AGE * COUNT) / sum(COUNT))
 
 towns <- fread("data/com_coords.csv") %>%
-  filter(LAT > 40) %>%
+  filter(LAT > 5000000) %>%
   merge(age.bal.fr, by = "POSTAL.CODE")
 
 g <- ggplot(towns, 
@@ -166,7 +167,7 @@ g <- ggplot(towns,
                                               label.position = "bottom",
                                               title.position = "top",
                                               barwidth = 25)) +
-  #coord_fixed() +
+  coord_fixed() +
   theme_graphzoo(base_size = 24, family = "Droid Sans Mono") +
   theme(axis.line = element_blank(), 
         axis.text.x = element_blank(), 
@@ -186,7 +187,7 @@ g <- addBanner(g, font.size = 6,
                l.txt = "GRAPHZOO.TUMBLR.COM", 
                r.txt = "SOURCE: DATA.GOUV.FR, INSEE, OSM")
 
-png("median_age_fr.png", width = 800, height = 900, bg = "#F0F0F0")
+png("median_age_fr.png", width = 700, height = 800, bg = "#F0F0F0")
 print(g)
 dev.off()   
 
@@ -199,7 +200,7 @@ g <- ggplot(towns,
                                               label.position = "bottom",
                                               title.position = "top",
                                               barwidth = 25)) +
-  #coord_fixed() +
+  coord_fixed() +
   theme_graphzoo(base_size = 24, family = "Droid Sans Mono") +
   theme(axis.line = element_blank(), 
         axis.text.x = element_blank(), 
@@ -219,6 +220,6 @@ g <- addBanner(g, font.size = 6,
                l.txt = "GRAPHZOO.TUMBLR.COM", 
                r.txt = "SOURCE: DATA.GOUV.FR, INSEE, OSM")
 
-png("median_age_en.png", width = 800, height = 900, bg = "#F0F0F0")
+png("median_age_en.png", width = 700, height = 800, bg = "#F0F0F0")
 print(g)
 dev.off()   
